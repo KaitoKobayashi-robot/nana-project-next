@@ -2,15 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { initializeApp } from "firebase/app";
-import {
-  getFirestore,
-  collection,
-  onSnapshot,
-  query,
-  orderBy,
-} from "firebase/firestore";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { ref, getDownloadURL } from "firebase/storage";
+import { db, storage } from "@/lib/firebase";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBS_S8Tfa_nNqH5TtrooC9EY4Be1qapIAk",
@@ -21,11 +15,6 @@ const firebaseConfig = {
   appId: "1:146917195160:web:5ceaf0d6333e0eb644bfed",
   measurementId: "G-CNDQ5N1D5P",
 };
-
-// Firebaseの初期化
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const storage = getStorage(app);
 
 export default function HomePage() {
   const [images, setImages] = useState<{ id: string; url: string }[]>([]);
