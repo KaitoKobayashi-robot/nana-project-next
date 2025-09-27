@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { v4 as uuidv4 } from "uuid";
 import { bucket } from "@/app/api/firebase";
 
 export async function POST(request: Request) {
@@ -11,7 +10,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No file uploaded" }, { status: 400 });
     }
 
-    const fileName = `${uuidv4()}-${file.name}`;
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
+    const millisec = String(now.getMilliseconds()).padStart(2, "0");
+    const dateString = `${year}-${month}-${day}_${hours}-${minutes}-${seconds}-${millisec}`;
+
+    const fileName = `${dateString}-${file.name}`;
     const filePath = `user_images_raw/${fileName}`;
     const fileRef = bucket.file(filePath);
 
