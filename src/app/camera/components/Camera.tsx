@@ -1,7 +1,9 @@
 "use client";
 
-import { useRef, useCallback, useState } from "react";
+import { useRef, useCallback, useState, useEffect } from "react";
 import Webcam from "react-webcam";
+import { db } from "@/lib/firebase";
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 
 // videoConstraintsの型定義
 interface VideoConstraints {
@@ -15,6 +17,7 @@ const Camera = () => {
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("");
+  const [countdown, setCountdown] = useState<number | null>(null);
 
   const videoConstraints: VideoConstraints = {
     width: { ideal: 3840 },
@@ -38,14 +41,14 @@ const Camera = () => {
     }
   }, [webcamRef]);
 
-  const handleUpload = async (): Promise<void> => {
-    if (!imgSrc) return;
+  const handleUpload = useCallback(async (src: string): Promise<void> => {
+    if (!src) return;
 
     setIsLoading(true);
     setMessage("アップロード中...");
 
     try {
-      const blob = await fetch(imgSrc).then((res) => res.blob());
+      const blob = await fetch(src).then((res) => res.blob());
       const formData = new FormData();
       formData.append("file", blob, "capture.png");
 
@@ -66,8 +69,40 @@ const Camera = () => {
       setMessage("エラーが発生しました。");
     } finally {
       setIsLoading(false);
+      setImgSrc(null);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const triggerDocRef = doc(db, "camera", "trigger");
+    const unsubscribe = onSnapshot(triggerDocRef, (docSnap) => {
+      if (docSnap.exists() && docSnap.data().triggered === true) {
+        setCountdown(10);
+        const countdownInterval = setInterval(() => {
+          setCountdown((prevCountdown) => {
+            if (prevCountdown === null) {
+              clearInterval(countdownInterval);
+              return null;
+            }
+            if (prevCountdown <= 1) {
+              clearInterval(countdownInterval);
+              const imageSrc = webcamRef.current?.getScreenshot();
+              if (imageSrc) {
+                setImgSrc(imageSrc);
+                handleUpload(imageSrc);
+              }
+              // トリガーをリセット
+              updateDoc(triggerDocRef, { triggered: false });
+              return null;
+            }
+            return prevCountdown - 1;
+          });
+        }, 1000);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [handleUpload]);
 
   // 共通のボタンスタイル
   const buttonClasses =
@@ -83,12 +118,16 @@ const Camera = () => {
           videoConstraints={videoConstraints}
           className="h-auto w-full"
         />
+        {countdown !== null && (
+          <div className="bg-opacity-50 absolute inset-0 flex items-center justify-center bg-black">
+            <p className="text-9xl font-bold text-white">{countdown}</p>
+          </div>
+        )}
       </div>
-
       <div className="mt-4">
         <button
           onClick={capture}
-          disabled={isLoading}
+          disabled={isLoading || countdown !== null}
           className={buttonClasses}
         >
           キャプチャ
@@ -105,7 +144,7 @@ const Camera = () => {
           />
           <div className="mt-4">
             <button
-              onClick={handleUpload}
+              onClick={() => handleUpload(imgSrc)}
               disabled={isLoading}
               className={buttonClasses}
             >
