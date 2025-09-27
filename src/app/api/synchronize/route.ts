@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import * as admin from "firebase-admin";
 
-const serviceAccount = require("./serviceAccountKey.json");
-
 if (!admin.apps.length) {
   if (process.env.NODE_ENV === "development") {
+    const serviceAccount = require("./serviceAccountKey.json");
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
       storageBucket: "nana-project-firebase.firebasestorage.app",
