@@ -4,10 +4,14 @@ import * as admin from "firebase-admin";
 const serviceAccount = require("./serviceAccountKey.json");
 
 if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: "nana-project-firebase.firebasestorage.app",
-  });
+  if (process.env.NODE_ENV === "development") {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+      storageBucket: "nana-project-firebase.firebasestorage.app",
+    });
+  } else {
+    admin.initializeApp();
+  }
 }
 
 const db = admin.firestore();
