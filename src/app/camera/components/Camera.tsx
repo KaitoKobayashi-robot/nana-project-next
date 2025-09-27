@@ -19,16 +19,19 @@ const Camera = () => {
   const videoConstraints: VideoConstraints = {
     width: { ideal: 3840 },
     height: { ideal: 2160 },
-    facingMode: "user",
+    facingMode: "environment",
   };
 
   const capture = useCallback(() => {
     if (webcamRef.current) {
-      const imageSrc = webcamRef.current.getScreenshot();
+      const imageSrc = webcamRef.current.getScreenshot({
+        width: videoConstraints.width.ideal,
+        height: videoConstraints.height.ideal,
+      });
       setImgSrc(imageSrc);
       setMessage("");
     }
-  }, [webcamRef]);
+  }, [webcamRef, videoConstraints]);
 
   const handleUpload = async (): Promise<void> => {
     if (!imgSrc) return;
