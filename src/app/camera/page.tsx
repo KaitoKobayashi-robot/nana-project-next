@@ -17,6 +17,7 @@ export default function CameraPage() {
       if (docSnap.exists()) {
         const data = docSnap.data();
         if (data.takePhoto) {
+          updateDoc(triggerDocRef, { isCapturing: true });
           setCameraState("capturing");
         } else if (data.showCamera) {
           setCameraState("cameraReady");
@@ -33,7 +34,11 @@ export default function CameraPage() {
 
   const handleComplete = async () => {
     const triggerDocRef = doc(db, "camera", "trigger");
-    await updateDoc(triggerDocRef, { showCamera: false, takePhoto: false });
+    await updateDoc(triggerDocRef, {
+      showCamera: false,
+      takePhoto: false,
+      isCapturing: false,
+    });
     setCameraState("waiting");
   };
 
