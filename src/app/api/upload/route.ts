@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { bucket } from "@/app/api/firebase";
+import { bucket, db } from "@/app/api/firebase";
 
 export async function POST(request: Request) {
   try {
@@ -32,9 +32,15 @@ export async function POST(request: Request) {
       },
     });
 
+    const docRef = db.collection("camera").doc("trigger");
+    await docRef.update({
+      latestImageName: fileName,
+    });
+
     return NextResponse.json({
       message: "File uploaded successfully to Storage",
       filePath,
+      fileName,
     });
   } catch (error: any) {
     console.error("Upload failed:", error);
