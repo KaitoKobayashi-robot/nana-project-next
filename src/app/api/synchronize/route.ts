@@ -18,12 +18,11 @@ export async function GET() {
   try {
     const col = db.collection("images");
     // 本番環境とローカル環境でフォルダを切り替え
-    const FOLDER =
-      process.env.NODE_ENV === "production" ? "user_images/" : "sample_images/";
+    const FOLDER = "sample_images/";
     const [files] = await bucket.getFiles({ prefix: FOLDER });
 
     const storageDocIds = new Set<string>();
-    files.forEach(f => {
+    files.forEach((f) => {
       if (!f.name.endsWith("/")) {
         storageDocIds.add(f.name.replace(/\//g, "_"));
       }
@@ -31,7 +30,7 @@ export async function GET() {
 
     const firestoreSnapshot = await col.get();
     const firestoreDocIds = new Set<string>();
-    firestoreSnapshot.forEach(doc => {
+    firestoreSnapshot.forEach((doc) => {
       firestoreDocIds.add(doc.id);
     });
 
@@ -49,13 +48,13 @@ export async function GET() {
         batch.set(
           col.doc(docId),
           { path: f.name, updatedAt: updatedTime },
-          { merge: true }
+          { merge: true },
         );
         added++;
       }
     }
 
-    firestoreSnapshot.forEach(doc => {
+    firestoreSnapshot.forEach((doc) => {
       if (!storageDocIds.has(doc.id)) {
         batch.delete(doc.ref);
         deleted++;
