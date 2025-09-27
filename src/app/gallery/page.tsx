@@ -86,9 +86,9 @@ export default function HomePage() {
               <div
                 key={`${image.id}-${index}`}
                 // transitionとtransformユーティリティでハイライトを表現
-                className={`transition-transform duration-300 ease-in-out ${
+                className={`rounded-lg transition-transform duration-300 ease-in-out ${
                   image.id === latestImageId
-                    ? "mx-4 scale-105 shadow-2xl shadow-yellow-400/50"
+                    ? "mx-4 scale-105 shadow-lg shadow-cyan-400/30"
                     : ""
                 }`}
               >
