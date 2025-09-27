@@ -2,8 +2,6 @@
 
 import { useRef, useCallback, useState, useEffect } from "react";
 import Webcam from "react-webcam";
-import { db } from "@/lib/firebase";
-import { doc, updateDoc } from "firebase/firestore";
 // videoConstraintsの型定義
 interface VideoConstraints {
   width: { ideal: number };
@@ -35,9 +33,7 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
     async (src: string): Promise<void> => {
       if (!src) return;
       setIsLoading(true);
-      const triggerDocRef = doc(db, "camera", "trigger");
       try {
-        await updateDoc(triggerDocRef, { isCapturing: true });
         const blob = await fetch(src).then((res) => res.blob());
         const formData = new FormData();
         formData.append("file", blob, ".png");
