@@ -23,15 +23,20 @@ const Camera = () => {
   };
 
   const capture = useCallback(() => {
-    if (webcamRef.current) {
+    if (webcamRef.current && webcamRef.current.video) {
+      const video = webcamRef.current.video;
+
+      const videoWidth = video.videoWidth;
+      const videoHeight = video.videoHeight;
+
       const imageSrc = webcamRef.current.getScreenshot({
-        width: videoConstraints.width.ideal,
-        height: videoConstraints.height.ideal,
+        width: videoWidth,
+        height: videoHeight,
       });
       setImgSrc(imageSrc);
       setMessage("");
     }
-  }, [webcamRef, videoConstraints]);
+  }, [webcamRef]);
 
   const handleUpload = async (): Promise<void> => {
     if (!imgSrc) return;
