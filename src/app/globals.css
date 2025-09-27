@@ -24,3 +24,38 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* アニメーションのユーティリティクラスを定義 */
+.scroll-animation {
+  animation: scroll 100s linear infinite;
+}
+
+/*
+  画像のフェードアウト用のマスクをユーティリティとして定義します。
+  .mask-gradient のようなカスタムクラスをここで作成できます。
+*/
+.mask-gradient {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    white 20%,
+    white 80%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    white 20%,
+    white 80%,
+    transparent
+  );
+}
