@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import * as admin from "firebase-admin";
 
-// サービスアカウントキーを環境変数から読み込む
 const serviceAccount = require("./serviceAccountKey.json");
 
 if (!admin.apps.length) {
@@ -17,7 +16,6 @@ const bucket = admin.storage().bucket();
 export async function GET() {
   try {
     const col = db.collection("images");
-    // 本番環境とローカル環境でフォルダを切り替え
     const FOLDER = "sample_images/";
     const [files] = await bucket.getFiles({ prefix: FOLDER });
 
