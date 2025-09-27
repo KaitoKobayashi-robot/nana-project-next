@@ -83,10 +83,7 @@ const Camera = () => {
                 console.log("カウントダウン終了。画像をキャプチャします。");
                 if (intervalRef.current) clearInterval(intervalRef.current);
 
-                const imageSrc = webcamRef.current?.getScreenshot({
-                  width: webcamRef.current.video?.width as number,
-                  height: webcamRef.current.video?.height as number,
-                });
+                const imageSrc = webcamRef.current?.getScreenshot();
                 if (imageSrc) {
                   console.log("画像のキャプチャに成功しました。");
                   setImgSrc(imageSrc);
@@ -135,6 +132,8 @@ const Camera = () => {
           screenshotFormat="image/png"
           videoConstraints={videoConstraints}
           className="h-auto w-full"
+          imageSmoothing={false}
+          screenshotQuality={1}
         />
         {countdown !== null && (
           <div className="absolute inset-0 flex items-center justify-center">
