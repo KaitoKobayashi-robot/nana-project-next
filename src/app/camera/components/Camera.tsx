@@ -1,11 +1,9 @@
-// src/app/camera/components/Camera.tsx
-
 "use client";
 
 import { useRef, useCallback, useState, useEffect } from "react";
 import Webcam from "react-webcam";
 import { db } from "@/lib/firebase";
-import { doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 
 // videoConstraintsの型定義
 interface VideoConstraints {
@@ -14,7 +12,12 @@ interface VideoConstraints {
   facingMode: "user" | "environment";
 }
 
-const Camera = () => {
+interface CameraProps {
+  startCapture: boolean;
+  onComplete: () => void;
+}
+
+const Camera = ({ startCapture, onComplete }: CameraProps) => {
   const webcamRef = useRef<Webcam>(null);
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -29,28 +32,32 @@ const Camera = () => {
     facingMode: "environment",
   };
 
-  const handleUpload = useCallback(async (src: string): Promise<void> => {
-    if (!src) return;
-    setIsLoading(true);
-    try {
-      const blob = await fetch(src).then((res) => res.blob());
-      const formData = new FormData();
-      formData.append("file", blob, "capture.png");
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Upload successful:", data);
+  const handleUpload = useCallback(
+    async (src: string): Promise<void> => {
+      if (!src) return;
+      setIsLoading(true);
+      try {
+        const blob = await fetch(src).then((res) => res.blob());
+        const formData = new FormData();
+        formData.append("file", blob, "capture.png");
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Upload successful:", data);
+        }
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      } finally {
+        setIsLoading(false);
+        setImgSrc(null);
+        onComplete();
       }
-    } catch (error) {
-      console.error("Error uploading file:", error);
-    } finally {
-      setIsLoading(false);
-      setImgSrc(null);
-    }
-  }, []);
+    },
+    [onComplete],
+  );
 
   const takePhoto = useCallback(async () => {
     // 撮影中であれば処理を中断
@@ -85,61 +92,30 @@ const Camera = () => {
   }, [webcamRef, handleUpload]);
 
   useEffect(() => {
-    console.log("Firestoreリスナーを設定します...");
-    const triggerDocRef = doc(db, "camera", "trigger");
-
-    const unsubscribe = onSnapshot(triggerDocRef, (docSnap) => {
-      console.log("Firestoreリスナーが発火しました。");
-      if (docSnap.exists()) {
-        console.log("ドキュメントのデータ:", docSnap.data());
-        if (docSnap.data().triggered === true) {
-          console.log(
-            "トリガー条件が満たされました。カウントダウンを開始します。",
-          );
-
-          if (intervalRef.current) {
-            clearInterval(intervalRef.current);
+    if (startCapture) {
+      setCountdown(10);
+      intervalRef.current = setInterval(() => {
+        setCountdown((prevCountdown) => {
+          if (prevCountdown === null) {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            return null;
           }
-
-          setCountdown(10);
-          intervalRef.current = setInterval(() => {
-            setCountdown((prevCountdown) => {
-              if (prevCountdown === null) {
-                if (intervalRef.current) clearInterval(intervalRef.current);
-                return null;
-              }
-              if (prevCountdown <= 1) {
-                console.log("カウントダウン終了。画像をキャプチャします。");
-                if (intervalRef.current) clearInterval(intervalRef.current);
-
-                takePhoto();
-
-                console.log("トリガーをリセットします。");
-                updateDoc(triggerDocRef, { triggered: false });
-                return null;
-              }
-              console.log("カウントダウン:", prevCountdown - 1);
-              return prevCountdown - 1;
-            });
-          }, 1000);
-        } else {
-          console.log(
-            "トリガー条件が満たされていません（triggeredがtrueではありません）。",
-          );
-        }
-      } else {
-        console.log("トリガードキュメントが存在しません。");
-      }
-    });
+          if (prevCountdown <= 1) {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            takePhoto();
+            return null;
+          }
+          return prevCountdown - 1;
+        });
+      }, 1000);
+    }
 
     return () => {
-      console.log("Firestoreリスナーとインターバルをクリーンアップします。");
-      unsubscribe();
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [takePhoto, handleUpload]);
+  }, [startCapture, takePhoto]);
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center p-4 text-center font-sans">
