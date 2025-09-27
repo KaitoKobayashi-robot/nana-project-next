@@ -1,20 +1,5 @@
 import { NextResponse } from "next/server";
-import * as admin from "firebase-admin";
-
-if (!admin.apps.length) {
-  if (process.env.NODE_ENV === "development") {
-    const serviceAccount = require("./serviceAccountKey.json");
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-      storageBucket: "nana-project-firebase.firebasestorage.app",
-    });
-  } else {
-    admin.initializeApp();
-  }
-}
-
-const db = admin.firestore();
-const bucket = admin.storage().bucket();
+import { db, bucket } from "@/app/api/firebase";
 
 export async function GET() {
   try {
