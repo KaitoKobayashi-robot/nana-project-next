@@ -1,3 +1,5 @@
+// src/app/camera/components/Camera.tsx
+
 "use client";
 
 import { useRef, useCallback, useState, useEffect } from "react";
@@ -17,9 +19,9 @@ const Camera = () => {
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number | null>(null);
-
-  // インターバルIDを保持するためのref
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  // 撮影中フラグ
+  const isCapturing = useRef(false);
 
   const videoConstraints: VideoConstraints = {
     width: { ideal: 3840 },
@@ -41,7 +43,6 @@ const Camera = () => {
       if (response.ok) {
         const data = await response.json();
         console.log("Upload successful:", data);
-      } else {
       }
     } catch (error) {
       console.error("Error uploading file:", error);
@@ -50,6 +51,38 @@ const Camera = () => {
       setImgSrc(null);
     }
   }, []);
+
+  const takePhoto = useCallback(async () => {
+    // 撮影中であれば処理を中断
+    if (isCapturing.current) return;
+
+    if (
+      !webcamRef.current ||
+      !webcamRef.current.video ||
+      !webcamRef.current.video.srcObject
+    ) {
+      console.log("カメラの準備ができていません。");
+      return;
+    }
+
+    try {
+      // 撮影中フラグを立てる
+      isCapturing.current = true;
+      const videoTrack = (
+        webcamRef.current.video.srcObject as MediaStream
+      ).getVideoTracks()[0];
+      const imageCapture = new ImageCapture(videoTrack);
+      const blob = await imageCapture.takePhoto();
+      const imageUrl = URL.createObjectURL(blob);
+      setImgSrc(imageUrl);
+      await handleUpload(imageUrl);
+    } catch (error) {
+      console.error("写真の撮影に失敗しました:", error);
+    } finally {
+      // 撮影完了後、フラグを解除
+      isCapturing.current = false;
+    }
+  }, [webcamRef, handleUpload]);
 
   useEffect(() => {
     console.log("Firestoreリスナーを設定します...");
@@ -64,7 +97,6 @@ const Camera = () => {
             "トリガー条件が満たされました。カウントダウンを開始します。",
           );
 
-          // 既存のインターバルをクリア
           if (intervalRef.current) {
             clearInterval(intervalRef.current);
           }
@@ -73,9 +105,6 @@ const Camera = () => {
           intervalRef.current = setInterval(() => {
             setCountdown((prevCountdown) => {
               if (prevCountdown === null) {
-                console.log(
-                  "カウントダウンがnullのため、インターバルをクリアします。",
-                );
                 if (intervalRef.current) clearInterval(intervalRef.current);
                 return null;
               }
@@ -83,14 +112,7 @@ const Camera = () => {
                 console.log("カウントダウン終了。画像をキャプチャします。");
                 if (intervalRef.current) clearInterval(intervalRef.current);
 
-                const imageSrc = webcamRef.current?.getScreenshot();
-                if (imageSrc) {
-                  console.log("画像のキャプチャに成功しました。");
-                  setImgSrc(imageSrc);
-                  handleUpload(imageSrc);
-                } else {
-                  console.log("画像のキャプチャに失敗しました。");
-                }
+                takePhoto();
 
                 console.log("トリガーをリセットします。");
                 updateDoc(triggerDocRef, { triggered: false });
@@ -117,11 +139,7 @@ const Camera = () => {
         clearInterval(intervalRef.current);
       }
     };
-  }, [handleUpload]);
-
-  // 共通のボタンスタイル
-  const buttonClasses =
-    "px-4 py-2 font-semibold text-white bg-blue-500 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 disabled:bg-gray-400 disabled:cursor-not-allowed";
+  }, [takePhoto, handleUpload]);
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center p-4 text-center font-sans">
@@ -132,8 +150,6 @@ const Camera = () => {
           screenshotFormat="image/png"
           videoConstraints={videoConstraints}
           className="h-auto w-full"
-          imageSmoothing={false}
-          screenshotQuality={1}
         />
         {countdown !== null && (
           <div className="absolute inset-0 flex items-center justify-center">
