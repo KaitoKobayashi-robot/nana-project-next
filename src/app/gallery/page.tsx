@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { initializeApp } from "firebase/app";
 import {
@@ -9,11 +9,9 @@ import {
   onSnapshot,
   query,
   orderBy,
-  connectFirestoreEmulator,
 } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
-// Firebaseの設定 (変更なし)
 const firebaseConfig = {
   apiKey: "AIzaSyBS_S8Tfa_nNqH5TtrooC9EY4Be1qapIAk",
   authDomain: "nana-project-firebase.firebaseapp.com",
@@ -28,8 +26,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
-
-// ローカル環境でのエミュレータ接続
 
 export default function HomePage() {
   const [images, setImages] = useState<{ id: string; url: string }[]>([]);
@@ -62,7 +58,6 @@ export default function HomePage() {
     return () => unsubscribe();
   }, []);
 
-  // 画像が0枚の時はアニメーションを止める
   const animationClass = images.length > 0 ? "animate-scroll" : "";
   const duplicatedImages = images.length > 0 ? [...images, ...images] : [];
 
@@ -74,18 +69,15 @@ export default function HomePage() {
         </h1>
         {loading && (
           <div className="my-8 flex flex-col items-center gap-4">
-            {/* Tailwind CSS標準のspinアニメーション */}
             <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-blue-500"></div>
             <p className="text-gray-600">画像を更新しているよ！</p>
           </div>
         )}
-        {/* globals.cssで定義した .mask-gradient を適用 */}
         <div className="mask-gradient w-full overflow-hidden p-8">
           <div className={`flex w-max gap-4 p-4 ${animationClass}`}>
             {duplicatedImages.map((image, index) => (
               <div
                 key={`${image.id}-${index}`}
-                // transitionとtransformユーティリティでハイライトを表現
                 className={`rounded-lg transition-transform duration-300 ease-in-out ${
                   image.id === latestImageId
                     ? "mx-4 scale-105 shadow-lg shadow-cyan-400/30"
