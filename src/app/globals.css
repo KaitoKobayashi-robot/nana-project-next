@@ -34,15 +34,10 @@ body {
   }
 }
 
-/* アニメーションのユーティリティクラスを定義 */
-.scroll-animation {
+.animate-scroll {
   animation: scroll 100s linear infinite;
 }
 
-/*
-  画像のフェードアウト用のマスクをユーティリティとして定義します。
-  .mask-gradient のようなカスタムクラスをここで作成できます。
-*/
 .mask-gradient {
   -webkit-mask-image: linear-gradient(
     to right,
