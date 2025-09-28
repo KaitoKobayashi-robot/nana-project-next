@@ -7,6 +7,7 @@ interface VideoConstraints {
   width: { ideal: number };
   height: { ideal: number };
   facingMode: "user" | "environment";
+  focusMode?: "continuous" | "manual" | "single-shot" | "none";
 }
 
 interface CameraProps {
@@ -27,6 +28,7 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
     width: { ideal: 3840 },
     height: { ideal: 2160 },
     facingMode: "environment",
+    focusMode: "continuous",
   };
 
   const handleUpload = useCallback(
@@ -75,8 +77,18 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
       const videoTrack = (
         webcamRef.current.video.srcObject as MediaStream
       ).getVideoTracks()[0];
-      const imageCapture = new ImageCapture(videoTrack);
+      if (videoTrack.getCapabilities?.().facingMode) {
+        try {
+          await videoTrack.applyConstraints({
+            advanced: [{ focusMode: "continuous" } as any],
+          });
+        } catch (error) {
+          console.error("Failed to apply focus constraints:", error);
+        }
+      }
       await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const imageCapture = new ImageCapture(videoTrack);
       const blob = await imageCapture.takePhoto();
       const imageUrl = URL.createObjectURL(blob);
       setImgSrc(imageUrl);
