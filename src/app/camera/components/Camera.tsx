@@ -76,6 +76,7 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
         webcamRef.current.video.srcObject as MediaStream
       ).getVideoTracks()[0];
       const imageCapture = new ImageCapture(videoTrack);
+      await new Promise((resolve) => setTimeout(resolve, 500));
       const blob = await imageCapture.takePhoto();
       const imageUrl = URL.createObjectURL(blob);
       setImgSrc(imageUrl);
