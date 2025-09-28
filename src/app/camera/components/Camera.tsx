@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useCallback, useState, useEffect } from "react";
-import Webcam from "react-webcam";
+
 // videoConstraintsの型定義
 interface VideoConstraints {
   width: { ideal: number };
@@ -16,13 +16,14 @@ interface CameraProps {
 }
 
 const Camera = ({ startCapture, onComplete }: CameraProps) => {
-  const webcamRef = useRef<Webcam>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   // 撮影中フラグ
   const isCapturing = useRef(false);
+  const streamRef = useRef<MediaStream | null>(null);
 
   const videoConstraints: VideoConstraints = {
     width: { ideal: 3840 },
@@ -61,12 +62,7 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
   const takePhoto = useCallback(async () => {
     // 撮影中であれば処理を中断
     if (isCapturing.current) return;
-
-    if (
-      !webcamRef.current ||
-      !webcamRef.current.video ||
-      !webcamRef.current.video.srcObject
-    ) {
+    if (!streamRef.current) {
       console.log("カメラの準備ができていません。");
       return;
     }
@@ -74,9 +70,7 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
     try {
       // 撮影中フラグを立てる
       isCapturing.current = true;
-      const videoTrack = (
-        webcamRef.current.video.srcObject as MediaStream
-      ).getVideoTracks()[0];
+      const videoTrack = streamRef.current.getVideoTracks()[0];
       if (videoTrack.getCapabilities?.().facingMode) {
         try {
           await videoTrack.applyConstraints({
@@ -99,7 +93,31 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
       // 撮影完了後、フラグを解除
       isCapturing.current = false;
     }
-  }, [webcamRef, handleUpload]);
+  }, [handleUpload]);
+
+  useEffect(() => {
+    const startCamera = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: videoConstraints,
+        });
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+        streamRef.current = stream;
+      } catch (err) {
+        console.error("カメラへのアクセスに失敗しました:", err);
+      }
+    };
+
+    startCamera();
+
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [videoConstraints]);
 
   useEffect(() => {
     if (startCapture) {
@@ -130,13 +148,7 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center p-4 text-center font-sans">
       <div className="relative w-full overflow-hidden rounded-lg shadow-lg">
-        <Webcam
-          audio={false}
-          ref={webcamRef}
-          screenshotFormat="image/png"
-          videoConstraints={videoConstraints}
-          className="h-auto w-full"
-        />
+        <video ref={videoRef} autoPlay playsInline className="h-auto w-full" />
         {countdown !== null && (
           <div className="absolute inset-0 flex items-center justify-center">
             <p
