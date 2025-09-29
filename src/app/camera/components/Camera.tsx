@@ -2,10 +2,6 @@
 
 import { useRef, useCallback, useState, useEffect } from "react";
 
-<<<<<<< HEAD
-const widthVideo = 1080;
-const heightVideo = 1920;
-=======
 // // videoConstraintsの型定義
 // interface VideoConstraints {
 //   width: { ideal: number };
@@ -22,7 +18,6 @@ const heightVideo = 1920;
 
 const widthVideo = 2160;
 const heightVideo = 3840;
->>>>>>> parent of 801016f (🎨)
 
 const videoConstraints: MediaStreamConstraints["video"] = {
   width: { ideal: widthVideo },
