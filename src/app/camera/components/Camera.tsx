@@ -16,12 +16,12 @@ import { useRef, useCallback, useState, useEffect } from "react";
 //   facingMode: "environment",
 // };
 
-const widthIdeal = 1080;
-const heightIdeal = 1920;
+const widthVideo = 2160;
+const heightVideo = 3840;
 
 const videoConstraints: MediaStreamConstraints["video"] = {
-  width: { ideal: widthIdeal },
-  height: { ideal: heightIdeal },
+  width: { exact: widthVideo },
+  height: { exact: heightVideo },
   facingMode: "environment",
 };
 
@@ -153,7 +153,7 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
     <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center p-4 text-center font-sans">
       <div
         className="relative w-full max-w-full overflow-hidden rounded-lg shadow-lg"
-        style={{ aspectRatio: `${widthIdeal}/${heightIdeal}` }}
+        style={{ aspectRatio: `${widthVideo}/${heightVideo}` }}
       >
         {" "}
         <video
