@@ -148,7 +148,7 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
           autoPlay
           playsInline
           className="h-auto w-full"
-          style={{ objectFit: "cover" }} // style属性を追加
+          style={{ aspectRatio: 9 / 16, objectFit: "cover" }} // style属性を追加
         />
         {countdown !== null && (
           <div className="absolute inset-0 flex items-center justify-center">
