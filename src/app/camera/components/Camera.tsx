@@ -158,7 +158,7 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
           playsInline
           className="h-auto w-full"
           style={{
-            aspectRatio: heightIdeal / widthIdeal,
+            aspectRatio: widthIdeal / heightIdeal,
             objectFit: "contain",
           }} // style属性を追加
         />
