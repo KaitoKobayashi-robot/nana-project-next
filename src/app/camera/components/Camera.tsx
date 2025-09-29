@@ -2,8 +2,27 @@
 
 import { useRef, useCallback, useState, useEffect } from "react";
 
+<<<<<<< HEAD
 const widthVideo = 1080;
 const heightVideo = 1920;
+=======
+// // videoConstraintsの型定義
+// interface VideoConstraints {
+//   width: { ideal: number };
+//   height: { ideal: number };
+//   facingMode: "user" | "environment";
+// }
+
+// // コンポーネントの外で定義することで、再レンダリングによる再生成を防ぐ
+// const videoConstraints: VideoConstraints = {
+//   width: { ideal: 1080 },
+//   height: { ideal: 1920 },
+//   facingMode: "environment",
+// };
+
+const widthVideo = 2160;
+const heightVideo = 3840;
+>>>>>>> parent of 801016f (🎨)
 
 const videoConstraints: MediaStreamConstraints["video"] = {
   width: { ideal: widthVideo },
