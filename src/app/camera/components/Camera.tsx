@@ -7,18 +7,13 @@ interface VideoConstraints {
   width: { ideal: number };
   height: { ideal: number };
   facingMode: "user" | "environment";
-  aspectRatio: number; // aspectRatioプロパティを追加
 }
-
-const idealWidth: number = 2160;
-const idealHeight: number = 3840;
 
 // コンポーネントの外で定義することで、再レンダリングによる再生成を防ぐ
 const videoConstraints: VideoConstraints = {
-  width: { ideal: idealWidth },
-  height: { ideal: idealHeight },
+  width: { ideal: 2160 },
+  height: { ideal: 3840 },
   facingMode: "environment",
-  aspectRatio: idealWidth / idealHeight, // アスペクト比を指定
 };
 
 interface CameraProps {
