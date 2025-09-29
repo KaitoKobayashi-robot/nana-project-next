@@ -10,15 +10,15 @@ interface VideoConstraints {
   aspectRatio: number; // aspectRatioプロパティを追加
 }
 
-const idealWidth: number = 6048;
-const idealHeight: number = 8064;
+const idealWidth: number = 2160;
+const idealHeight: number = 3840;
 
 // コンポーネントの外で定義することで、再レンダリングによる再生成を防ぐ
 const videoConstraints: VideoConstraints = {
   width: { ideal: idealWidth },
   height: { ideal: idealHeight },
   facingMode: "environment",
-  aspectRatio: idealWidth / idealHeight, // アスペクト比を3:4に指定
+  aspectRatio: idealWidth / idealHeight, // アスペクト比を指定
 };
 
 interface CameraProps {
@@ -105,17 +105,6 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
           videoRef.current.srcObject = stream;
         }
         streamRef.current = stream;
-
-        // 明るさの自動調整（露出補正）
-        const videoTrack = stream.getVideoTracks()[0];
-        const capabilities = videoTrack.getCapabilities();
-        // @ts-ignore: exposureCompensation is not in the default MediaTrackCapabilities type
-        if (capabilities.exposureCompensation) {
-          videoTrack.applyConstraints({
-            // @ts-ignore
-            exposureCompensation: 0.0,
-          });
-        }
       } catch (err) {
         console.error("カメラへのアクセスに失敗しました:", err);
       }
@@ -177,9 +166,9 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
           </div>
         )}
         {isLoading && (
-          <div className="bg-opacity-50 absolute inset-0 flex flex-col items-center justify-center bg-black">
-            <div className="h-16 w-16 animate-spin rounded-full border-t-2 border-b-2 border-white"></div>
-            <p className="mt-4 text-white">アップロード中...</p>
+          <div className="bg-opacity-50 absolute inset-0 flex flex-col items-center justify-center bg-white">
+            <div className="h-16 w-16 animate-spin rounded-full border-t-2 border-b-2 border-black"></div>
+            <p className="mt-4 text-black">アップロード中...</p>
           </div>
         )}
       </div>
