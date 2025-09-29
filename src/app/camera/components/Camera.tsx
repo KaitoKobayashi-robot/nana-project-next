@@ -2,20 +2,6 @@
 
 import { useRef, useCallback, useState, useEffect } from "react";
 
-// // videoConstraintsの型定義
-// interface VideoConstraints {
-//   width: { ideal: number };
-//   height: { ideal: number };
-//   facingMode: "user" | "environment";
-// }
-
-// // コンポーネントの外で定義することで、再レンダリングによる再生成を防ぐ
-// const videoConstraints: VideoConstraints = {
-//   width: { ideal: 1080 },
-//   height: { ideal: 1920 },
-//   facingMode: "environment",
-// };
-
 const widthVideo = 1080;
 const heightVideo = 1920;
 
@@ -32,20 +18,20 @@ interface CameraProps {
 
 const Camera = ({ startCapture, onComplete }: CameraProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null); // Canvasのrefを追加
   const [imgSrc, setImgSrc] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  // 撮影中フラグ
   const isCapturing = useRef(false);
   const streamRef = useRef<MediaStream | null>(null);
 
   const handleUpload = useCallback(
-    async (src: string): Promise<void> => {
-      if (!src) return;
+    async (blob: Blob | null): Promise<void> => {
+      // Blobを受け取るように変更
+      if (!blob) return;
       setIsLoading(true);
       try {
-        const blob = await fetch(src).then((res) => res.blob());
         const formData = new FormData();
         formData.append("file", blob, ".png");
         const response = await fetch("/api/upload", {
@@ -68,33 +54,41 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
   );
 
   const takePhoto = useCallback(async () => {
-    // 撮影中であれば処理を中断
-    if (isCapturing.current) return;
-    if (!streamRef.current) {
-      console.log("カメラの準備ができていません。");
-      return;
-    }
+    if (isCapturing.current || !videoRef.current || !canvasRef.current) return;
 
-    const videoTrack = streamRef.current.getVideoTracks()[0];
-    if (!videoTrack || videoTrack.readyState === "ended") {
-      console.error("ビデオトラックが無効な状態です。");
-      return;
-    }
+    isCapturing.current = true;
 
-    try {
-      // 撮影中フラグを立てる
-      isCapturing.current = true;
-      await new Promise((resolve) => setTimeout(resolve, 500));
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
 
-      const imageCapture = new ImageCapture(videoTrack);
-      const blob = await imageCapture.takePhoto();
-      const imageUrl = URL.createObjectURL(blob);
-      setImgSrc(imageUrl);
-      await handleUpload(imageUrl);
-    } catch (error) {
-      console.error("写真の撮影に失敗しました:", error);
-    } finally {
-      // 撮影完了後、フラグを解除
+    // ビデオの現在の解像度を取得
+    const videoWidth = video.videoWidth;
+    const videoHeight = video.videoHeight;
+
+    // Canvasのサイズをビデオの向きに合わせて設定
+    // 縦長にするため、widthとheightを入れ替える
+    canvas.width = videoHeight;
+    canvas.height = videoWidth;
+
+    const context = canvas.getContext("2d");
+    if (context) {
+      // Canvasを90度回転
+      context.translate(canvas.width / 2, canvas.height / 2);
+      context.rotate(Math.PI / 2);
+      // ビデオフレームを描画
+      context.drawImage(video, -videoWidth / 2, -videoHeight / 2);
+
+      // CanvasからBlobを取得
+      canvas.toBlob(async (blob) => {
+        if (blob) {
+          // imgSrcに設定してプレビュー（任意）
+          const imageUrl = URL.createObjectURL(blob);
+          setImgSrc(imageUrl);
+          await handleUpload(blob);
+        }
+        isCapturing.current = false;
+      }, "image/png");
+    } else {
       isCapturing.current = false;
     }
   }, [handleUpload]);
@@ -121,7 +115,7 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
         streamRef.current.getTracks().forEach((track) => track.stop());
       }
     };
-  }, []); // 依存配列を空にして、マウント時に一度だけ実行されるようにする
+  }, []);
 
   useEffect(() => {
     if (startCapture) {
@@ -149,17 +143,20 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
     };
   }, [startCapture, takePhoto]);
 
+  // CSSでの回転はプレビューにのみ適用
+  const videoStyle: React.CSSProperties = {
+    transform: "rotate(90deg)",
+    width: "calc(100vh)",
+    height: "calc(100vw)",
+    objectFit: "cover",
+  };
+
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center p-4 text-center font-sans">
       <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg bg-black shadow-lg">
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          style={{
-            objectFit: "cover",
-          }}
-        />
+        <video ref={videoRef} autoPlay playsInline style={videoStyle} />
+        {/* 非表示のCanvas要素を追加 */}
+        <canvas ref={canvasRef} style={{ display: "none" }} />
         {countdown !== null && (
           <div className="absolute inset-0 flex items-center justify-center">
             <p
