@@ -156,7 +156,6 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
           ref={videoRef}
           autoPlay
           playsInline
-          className="absolute"
           style={{
             objectFit: "cover",
           }}
