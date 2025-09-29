@@ -151,14 +151,17 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center p-4 text-center font-sans">
-      <div className="relative w-full overflow-hidden rounded-lg shadow-lg">
+      <div
+        className="relative w-full max-w-full overflow-hidden rounded-lg shadow-lg"
+        style={{ aspectRatio: `${widthIdeal}/${heightIdeal}` }}
+      >
+        {" "}
         <video
           ref={videoRef}
           autoPlay
           playsInline
-          className="h-full w-auto"
+          className="h-full w-full"
           style={{
-            aspectRatio: widthIdeal / heightIdeal,
             objectFit: "contain",
           }} // style属性を追加
         />
