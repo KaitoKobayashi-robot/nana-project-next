@@ -7,8 +7,14 @@ interface VideoConstraints {
   width: { ideal: number };
   height: { ideal: number };
   facingMode: "user" | "environment";
-  focusMode?: "continuous" | "manual" | "single-shot" | "none";
 }
+
+// コンポーネントの外で定義することで、再レンダリングによる再生成を防ぐ
+const videoConstraints: VideoConstraints = {
+  width: { ideal: 6000 },
+  height: { ideal: 8000 },
+  facingMode: "environment",
+};
 
 interface CameraProps {
   startCapture: boolean;
@@ -24,13 +30,6 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
   // 撮影中フラグ
   const isCapturing = useRef(false);
   const streamRef = useRef<MediaStream | null>(null);
-
-  const videoConstraints: VideoConstraints = {
-    width: { ideal: 3840 },
-    height: { ideal: 2160 },
-    facingMode: "environment",
-    focusMode: "continuous",
-  };
 
   const handleUpload = useCallback(
     async (src: string): Promise<void> => {
@@ -67,19 +66,15 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
       return;
     }
 
+    const videoTrack = streamRef.current.getVideoTracks()[0];
+    if (!videoTrack || videoTrack.readyState === "ended") {
+      console.error("ビデオトラックが無効な状態です。");
+      return;
+    }
+
     try {
       // 撮影中フラグを立てる
       isCapturing.current = true;
-      const videoTrack = streamRef.current.getVideoTracks()[0];
-      if (videoTrack.getCapabilities?.().facingMode) {
-        try {
-          await videoTrack.applyConstraints({
-            advanced: [{ focusMode: "continuous" } as any],
-          });
-        } catch (error) {
-          console.error("Failed to apply focus constraints:", error);
-        }
-      }
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       const imageCapture = new ImageCapture(videoTrack);
@@ -117,7 +112,7 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
         streamRef.current.getTracks().forEach((track) => track.stop());
       }
     };
-  }, [videoConstraints]);
+  }, []); // 依存配列を空にして、マウント時に一度だけ実行されるようにする
 
   useEffect(() => {
     if (startCapture) {
