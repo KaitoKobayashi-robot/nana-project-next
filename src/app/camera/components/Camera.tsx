@@ -7,13 +7,18 @@ interface VideoConstraints {
   width: { ideal: number };
   height: { ideal: number };
   facingMode: "user" | "environment";
+  aspectRatio: number; // aspectRatioプロパティを追加
 }
+
+const idealWidth: number = 6048;
+const idealHeight: number = 8064;
 
 // コンポーネントの外で定義することで、再レンダリングによる再生成を防ぐ
 const videoConstraints: VideoConstraints = {
-  width: { ideal: 6000 },
-  height: { ideal: 8000 },
+  width: { ideal: idealWidth },
+  height: { ideal: idealHeight },
   facingMode: "environment",
+  aspectRatio: idealWidth / idealHeight, // アスペクト比を3:4に指定
 };
 
 interface CameraProps {
@@ -100,6 +105,17 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
           videoRef.current.srcObject = stream;
         }
         streamRef.current = stream;
+
+        // 明るさの自動調整（露出補正）
+        const videoTrack = stream.getVideoTracks()[0];
+        const capabilities = videoTrack.getCapabilities();
+        // @ts-ignore: exposureCompensation is not in the default MediaTrackCapabilities type
+        if (capabilities.exposureCompensation) {
+          videoTrack.applyConstraints({
+            // @ts-ignore
+            exposureCompensation: 0.0,
+          });
+        }
       } catch (err) {
         console.error("カメラへのアクセスに失敗しました:", err);
       }
@@ -143,7 +159,13 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center p-4 text-center font-sans">
       <div className="relative w-full overflow-hidden rounded-lg shadow-lg">
-        <video ref={videoRef} autoPlay playsInline className="h-auto w-full" />
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          className="h-auto w-full"
+          style={{ aspectRatio: "3 / 4", objectFit: "cover" }} // style属性を追加
+        />
         {countdown !== null && (
           <div className="absolute inset-0 flex items-center justify-center">
             <p
