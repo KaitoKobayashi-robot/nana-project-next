@@ -158,10 +158,6 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
           playsInline
           className="absolute"
           style={{
-            width: "calc(100vh * (1920 / 1080))", // 高さを基準に幅を計算
-            height: "100vh", // ビューポートの高さに合わせる
-            transform: "rotate(90deg)",
-            transformOrigin: "center",
             objectFit: "cover",
           }}
         />
