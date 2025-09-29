@@ -17,6 +17,8 @@ import { useRef, useCallback, useState, useEffect } from "react";
 // };
 
 const videoConstraints: MediaStreamConstraints["video"] = {
+  width: { ideal: 1080 },
+  height: { ideal: 1920 },
   facingMode: "environment",
 };
 
