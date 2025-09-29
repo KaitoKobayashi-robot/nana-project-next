@@ -16,8 +16,8 @@ import { useRef, useCallback, useState, useEffect } from "react";
 //   facingMode: "environment",
 // };
 
-const widthIdeal = 3024;
-const heightIdeal = 4032;
+const widthIdeal = 1936;
+const heightIdeal = 2592;
 
 const videoConstraints: MediaStreamConstraints["video"] = {
   width: { ideal: widthIdeal },
