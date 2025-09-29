@@ -168,9 +168,14 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center p-4 text-center font-sans">
       <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg bg-black shadow-lg">
-        <video ref={videoRef} autoPlay playsInline style={videoStyle} />
-        {/* 非表示のCanvas要素を追加 */}
-        <canvas ref={canvasRef} style={{ display: "none" }} />
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          style={{
+            objectFit: "cover",
+          }}
+        />
         {countdown !== null && (
           <div className="absolute inset-0 flex items-center justify-center">
             <p
