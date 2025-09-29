@@ -20,8 +20,8 @@ const widthVideo = 2160;
 const heightVideo = 3840;
 
 const videoConstraints: MediaStreamConstraints["video"] = {
-  width: { exact: widthVideo },
-  height: { exact: heightVideo },
+  width: { ideal: widthVideo },
+  height: { ideal: heightVideo },
   facingMode: "environment",
 };
 
@@ -151,19 +151,19 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center p-4 text-center font-sans">
-      <div
-        className="relative w-full max-w-full overflow-hidden rounded-lg shadow-lg"
-        style={{ aspectRatio: `${widthVideo}/${heightVideo}` }}
-      >
-        {" "}
+      <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg bg-black shadow-lg">
         <video
           ref={videoRef}
           autoPlay
           playsInline
-          className="h-full w-full"
+          className="absolute"
           style={{
-            objectFit: "contain",
-          }} // style属性を追加
+            width: "calc(100vh * (1920 / 1080))", // 高さを基準に幅を計算
+            height: "100vh", // ビューポートの高さに合わせる
+            transform: "rotate(90deg)",
+            transformOrigin: "center",
+            objectFit: "cover",
+          }}
         />
         {countdown !== null && (
           <div className="absolute inset-0 flex items-center justify-center">

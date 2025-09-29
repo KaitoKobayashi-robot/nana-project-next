@@ -56,7 +56,9 @@ export default function CameraPage() {
               "準備が出来たら撮影ボタンを押してね。\nボタンを押すと10秒のカウントが始まるよ"
             }
           </p>
-          <Camera startCapture={false} onComplete={handleComplete} />
+          <div className="h-screen w-screen max-w-md">
+            <Camera startCapture={false} onComplete={handleComplete} />
+          </div>
         </div>
       )}
       {cameraState === "capturing" && (
