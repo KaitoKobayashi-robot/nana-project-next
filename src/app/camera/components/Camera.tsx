@@ -156,7 +156,7 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
           ref={videoRef}
           autoPlay
           playsInline
-          className="h-auto w-full"
+          className="h-full w-auto"
           style={{
             aspectRatio: widthIdeal / heightIdeal,
             objectFit: "contain",
