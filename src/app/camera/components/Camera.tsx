@@ -16,9 +16,12 @@ import { useRef, useCallback, useState, useEffect } from "react";
 //   facingMode: "environment",
 // };
 
+const widthIdeal = 3024;
+const heightIdeal = 4032;
+
 const videoConstraints: MediaStreamConstraints["video"] = {
-  width: { ideal: 1080 },
-  height: { ideal: 1920 },
+  width: { ideal: widthIdeal },
+  height: { ideal: heightIdeal },
   facingMode: "environment",
 };
 
@@ -154,7 +157,10 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
           autoPlay
           playsInline
           className="h-auto w-full"
-          style={{ objectFit: "contain" }} // style属性を追加
+          style={{
+            aspectRatio: widthIdeal / heightIdeal,
+            objectFit: "contain",
+          }} // style属性を追加
         />
         {countdown !== null && (
           <div className="absolute inset-0 flex items-center justify-center">
