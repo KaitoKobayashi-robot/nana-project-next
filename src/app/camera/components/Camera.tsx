@@ -11,8 +11,8 @@ interface VideoConstraints {
 
 // コンポーネントの外で定義することで、再レンダリングによる再生成を防ぐ
 const videoConstraints: VideoConstraints = {
-  width: { ideal: 2160 },
-  height: { ideal: 3840 },
+  width: { ideal: 1080 },
+  height: { ideal: 1920 },
   facingMode: "environment",
 };
 
