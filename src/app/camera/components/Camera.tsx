@@ -2,17 +2,21 @@
 
 import { useRef, useCallback, useState, useEffect } from "react";
 
-// videoConstraintsの型定義
-interface VideoConstraints {
-  width: { ideal: number };
-  height: { ideal: number };
-  facingMode: "user" | "environment";
-}
+// // videoConstraintsの型定義
+// interface VideoConstraints {
+//   width: { ideal: number };
+//   height: { ideal: number };
+//   facingMode: "user" | "environment";
+// }
 
-// コンポーネントの外で定義することで、再レンダリングによる再生成を防ぐ
-const videoConstraints: VideoConstraints = {
-  width: { ideal: 1080 },
-  height: { ideal: 1920 },
+// // コンポーネントの外で定義することで、再レンダリングによる再生成を防ぐ
+// const videoConstraints: VideoConstraints = {
+//   width: { ideal: 1080 },
+//   height: { ideal: 1920 },
+//   facingMode: "environment",
+// };
+
+const videoConstraints: MediaStreamConstraints["video"] = {
   facingMode: "environment",
 };
 
