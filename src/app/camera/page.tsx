@@ -50,7 +50,7 @@ export default function CameraPage() {
       )}
       {cameraState === "cameraReady" && (
         <div className="flex min-h-screen flex-col items-center justify-center">
-          <h1 className="text-4xl font-bold">カメラ準備完了</h1>
+          <h1 className="mt-4 text-4xl font-bold">カメラ準備完了</h1>
           <p className="mt-4 text-lg whitespace-pre-wrap">
             {
               "準備が出来たら撮影ボタンを押してね。\nボタンを押すと10秒のカウントが始まるよ"
