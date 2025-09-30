@@ -2,22 +2,8 @@
 
 import { useRef, useCallback, useState, useEffect } from "react";
 
-// // videoConstraintsの型定義
-// interface VideoConstraints {
-//   width: { ideal: number };
-//   height: { ideal: number };
-//   facingMode: "user" | "environment";
-// }
-
-// // コンポーネントの外で定義することで、再レンダリングによる再生成を防ぐ
-// const videoConstraints: VideoConstraints = {
-//   width: { ideal: 1080 },
-//   height: { ideal: 1920 },
-//   facingMode: "environment",
-// };
-
-const widthVideo = 2160;
-const heightVideo = 3840;
+const widthVideo = 1080;
+const heightVideo = 1920;
 
 const videoConstraints: MediaStreamConstraints["video"] = {
   width: { ideal: widthVideo },
@@ -74,23 +60,16 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
-
-    // ビデオの現在の解像度を取得
-    const videoWidth = video.videoWidth;
-    const videoHeight = video.videoHeight;
-
-    // Canvasのサイズをビデオの向きに合わせて設定
-    // 縦長にするため、widthとheightを入れ替える
-    canvas.width = videoHeight;
-    canvas.height = videoWidth;
-
     const context = canvas.getContext("2d");
+
     if (context) {
-      // Canvasを90度回転
-      context.translate(canvas.width / 2, canvas.height / 2);
-      context.rotate(Math.PI / 2);
-      // ビデオフレームを描画
-      context.drawImage(video, -videoWidth / 2, -videoHeight / 2);
+      const videoWidth = video.videoWidth;
+      const videoHeight = video.videoHeight;
+
+      canvas.width = videoWidth;
+      canvas.height = videoHeight;
+
+      context.drawImage(video, 0, 0, videoWidth, videoHeight);
 
       // CanvasからBlobを取得
       canvas.toBlob(async (blob) => {
@@ -157,14 +136,6 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
     };
   }, [startCapture, takePhoto]);
 
-  // CSSでの回転はプレビューにのみ適用
-  const videoStyle: React.CSSProperties = {
-    transform: "rotate(90deg)",
-    width: "calc(100vh)",
-    height: "calc(100vw)",
-    objectFit: "cover",
-  };
-
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center p-4 text-center font-sans">
       <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-lg bg-black shadow-lg">
@@ -172,10 +143,14 @@ const Camera = ({ startCapture, onComplete }: CameraProps) => {
           ref={videoRef}
           autoPlay
           playsInline
+          muted
           style={{
+            width: "100%",
+            height: "100%",
             objectFit: "cover",
           }}
         />
+        <canvas ref={canvasRef} style={{ display: "none" }} />
         {countdown !== null && (
           <div className="absolute inset-0 flex items-center justify-center">
             <p
