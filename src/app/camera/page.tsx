@@ -2,16 +2,62 @@
 
 import Camera from "./_components/Camera";
 import { useEffect, useState } from "react";
-import { doc, onSnapshot, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  onSnapshot,
+  updateDoc,
+  getDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { v4 as uuidv4 } from "uuid";
 
-type CameraState = "waiting" | "cameraReady" | "capturing";
+type CameraState = "waiting" | "cameraReady" | "capturing" | "locked";
 
 export default function CameraPage() {
   const [cameraState, setCameraState] = useState<CameraState>("waiting");
+  const [ownerId, setOwnerId] = useState<string | null>(null);
 
   useEffect(() => {
+    const getDeviceId = () => {
+      let deviceId = localStorage.getItem("deviceId");
+      if (!deviceId) {
+        deviceId = uuidv4();
+        localStorage.setItem("deviceId", deviceId);
+      }
+      return deviceId;
+    };
+
+    const deviceId = getDeviceId();
+    setOwnerId(deviceId);
+
+    const resourceDocRef = doc(db, "camera", "resource");
     const triggerDocRef = doc(db, "camera", "trigger");
+
+    const lockResource = async () => {
+      const resourceDoc = await getDoc(resourceDocRef);
+      if (resourceDoc.exists() && resourceDoc.data().isLocked) {
+        setCameraState("locked");
+      } else {
+        await updateDoc(resourceDocRef, {
+          isLocked: true,
+          lockedAt: serverTimestamp(),
+          ownerId: deviceId,
+        });
+      }
+    };
+
+    const unlockResource = async () => {
+      const resourceDoc = await getDoc(resourceDocRef);
+      if (resourceDoc.exists() && resourceDoc.data().ownerId === deviceId) {
+        await updateDoc(resourceDocRef, {
+          isLocked: false,
+          ownerId: "",
+        });
+      }
+    };
+
+    lockResource();
 
     const unsubscribe = onSnapshot(triggerDocRef, (docSnap) => {
       if (docSnap.exists()) {
@@ -26,8 +72,16 @@ export default function CameraPage() {
       }
     });
 
+    const handleBeforeUnload = () => {
+      unlockResource();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
     return () => {
       unsubscribe();
+      unlockResource();
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
 
@@ -42,6 +96,11 @@ export default function CameraPage() {
 
   return (
     <div>
+      {cameraState === "locked" && (
+        <div className="flex min-h-screen flex-col items-center justify-center">
+          <h1 className="text-4xl font-bold">カメラ使用中</h1>
+        </div>
+      )}
       {cameraState === "waiting" && (
         <div className="flex min-h-screen flex-col items-center justify-center">
           <h1 className="text-4xl font-bold">待機中...</h1>
