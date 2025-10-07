@@ -1,6 +1,6 @@
 "use client";
 
-import Camera from "./components/Camera";
+import Camera from "./_components/Camera";
 import { useEffect, useState } from "react";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
