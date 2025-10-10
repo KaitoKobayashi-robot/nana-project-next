@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tailwindcss-animated";
 
 :root {
   --background: #ffffff;
@@ -53,4 +54,17 @@ body {
     white 80%,
     transparent
   );
+}
+
+@keyframes text-animation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-text-animation {
+  animation: text-animation 0.8s ease-in forwards;
 }
