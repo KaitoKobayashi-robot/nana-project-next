@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body
-        className={`${zenMaruGothic.variable} ${geistSans.variable} ${geistMono.variable} bg-[#eed243] antialiased`}
+        className={`${zenMaruGothic.variable} ${geistSans.variable} ${geistMono.variable} bg-[#eed243] text-[#2c2522] antialiased`}
       >
         {children}
       </body>

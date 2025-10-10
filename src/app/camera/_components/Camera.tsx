@@ -2,8 +2,8 @@
 
 import { useRef, useCallback, useState, useEffect } from "react";
 
-const widthVideo = 6000;
-const heightVideo = 8000;
+const widthVideo = 3000;
+const heightVideo = 3000;
 
 const videoConstraints: MediaStreamConstraints["video"] = {
   width: { ideal: widthVideo },
@@ -14,13 +14,13 @@ const videoConstraints: MediaStreamConstraints["video"] = {
 interface CameraProps {
   startCapture: boolean;
   onComplete: () => void;
-  aspectRatio?: number; // ✅ 変更点: アスペクト比をpropsとして受け取る
+  aspectRatio?: number;
 }
 
 const Camera = ({
   startCapture,
   onComplete,
-  aspectRatio = 3 / 4, // ✅ 変更点: デフォルト値を設定 (例: 16:9)
+  aspectRatio = 3 / 4,
 }: CameraProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -57,7 +57,6 @@ const Camera = ({
     [onComplete],
   );
 
-  // ✅ 変更点: takePhoto関数全体をアスペクト比に合わせてクロップするロジックに修正
   const takePhoto = useCallback(async () => {
     if (isCapturing.current || !videoRef.current || !canvasRef.current) return;
 
@@ -107,7 +106,7 @@ const Camera = ({
     } else {
       isCapturing.current = false;
     }
-  }, [handleUpload, aspectRatio]); // 依存配列にaspectRatioを追加
+  }, [handleUpload, aspectRatio]);
 
   useEffect(() => {
     const startCamera = async () => {
@@ -160,10 +159,9 @@ const Camera = ({
   }, [startCapture, takePhoto]);
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center p-4 text-center font-sans">
-      {/* ✅ 変更点: ビデオのコンテナにCSSの aspect-ratio を適用 */}
+    <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center overflow-hidden p-4 text-center">
       <div
-        className="relative w-full overflow-hidden rounded-lg bg-black shadow-lg"
+        className="relative flex w-full items-center justify-center overflow-hidden rounded-lg"
         style={{ aspectRatio: `${aspectRatio}` }}
       >
         <video
@@ -172,12 +170,14 @@ const Camera = ({
           playsInline
           muted
           style={{
-            // ✅ 変更点: コンテナいっぱいに広がるように絶対配置
             position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            minWidth: "100%",
+            minHeight: "100%",
+            width: "auto",
+            height: "auto",
             objectFit: "cover",
           }}
         />
@@ -185,17 +185,17 @@ const Camera = ({
         {countdown !== null && (
           <div className="absolute inset-0 flex items-center justify-center">
             <p
-              className="text-9xl font-bold text-white"
-              style={{ textShadow: "0 0 10px rgba(0, 0, 0, 0.8)" }}
+              className="text-9xl font-bold text-[#5fc5be]"
+              // style={{ textShadow: "0 0 10px rgba(0, 0, 0, 0.8)" }}
             >
               {countdown}
             </p>
           </div>
         )}
         {isLoading && (
-          <div className="bg-opacity-50 absolute inset-0 flex flex-col items-center justify-center bg-white">
-            <div className="h-16 w-16 animate-spin rounded-full border-t-2 border-b-2 border-black"></div>
-            <p className="mt-4 text-black">アップロード中...</p>
+          <div className="bg-opacity-50 absolute inset-0 flex flex-col items-center justify-center bg-[#eed243]">
+            <div className="h-16 w-16 animate-spin rounded-full border-t-2 border-b-2 border-[#2c2522]"></div>
+            <p className="mt-4 font-bold">アップロード中...</p>
           </div>
         )}
       </div>

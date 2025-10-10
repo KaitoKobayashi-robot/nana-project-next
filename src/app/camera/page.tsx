@@ -42,7 +42,7 @@ export default function CameraPage() {
   };
 
   return (
-    <div>
+    <div className="flex items-center justify-center">
       {cameraState === "waiting" && (
         <div className="flex min-h-screen flex-col items-center justify-center">
           <Loading />
@@ -56,13 +56,15 @@ export default function CameraPage() {
               "準備が出来たら撮影ボタンを押してね。\nボタンを押すと10秒のカウントが始まるよ"
             }
           </p>
-          <div className="h-screen w-screen max-w-md">
+          <div className="flex h-screen w-screen max-w-md items-center justify-center">
             <Camera startCapture={false} onComplete={handleComplete} />
           </div>
         </div>
       )}
       {cameraState === "capturing" && (
-        <Camera startCapture={true} onComplete={handleComplete} />
+        <div className="flex h-screen w-screen max-w-md items-center justify-center">
+          <Camera startCapture={true} onComplete={handleComplete} />
+        </div>
       )}
     </div>
   );
