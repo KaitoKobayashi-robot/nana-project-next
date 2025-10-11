@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg id="_レイヤー_1" data-name="レイヤー_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 700 333.475">
+  <defs>
+    <style>
+      .st0 {
+        fill: #fff;
+        stroke: #231815;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 4.01px;
+      }
+    </style>
+  </defs>
+  <path class="st0" d="M 674.145 50.818 L 371.485 50.818 L 353.055 9.858 L 334.625 50.818 L 25.855 50.818 C 17.115 50.818 10.035 57.898 10.035 66.638 L 10.035 307.798 C 10.035 316.538 17.115 323.618 25.855 323.618 L 674.145 323.618 C 682.885 323.618 689.965 316.538 689.965 307.798 L 689.965 66.638 C 689.965 57.898 682.885 50.818 674.145 50.818 Z"/>
+</svg>
