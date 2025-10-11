@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useCallback, useState, useEffect } from "react";
+import Image from "next/image";
 
 const widthVideo = 3000;
 const heightVideo = 3000;
@@ -92,9 +93,20 @@ const Camera = ({
       canvas.width = sWidth;
       canvas.height = sHeight;
 
+      // ここから反転処理
+      // 現在のコンテキストの状態を保存
+      context.save();
+      // 水平方向に反転
+      context.scale(-1, 1);
+      // 描画基準点を右端に移動
+      context.translate(-sWidth, 0);
+
       // ビデオから計算した領域を切り抜いてCanvasに描画
       context.drawImage(video, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
 
+      context.restore(); // コンテキストの状態を元に戻す
+
+      // 画像をBlobとして取得し、アップロード処理へ渡す
       canvas.toBlob(async (blob) => {
         if (blob) {
           const imageUrl = URL.createObjectURL(blob);
@@ -133,25 +145,32 @@ const Camera = ({
   }, []);
 
   useEffect(() => {
+    let timeoutId = null;
+
     if (startCapture) {
-      setCountdown(10);
-      intervalRef.current = setInterval(() => {
-        setCountdown((prevCountdown) => {
-          if (prevCountdown === null) {
-            if (intervalRef.current) clearInterval(intervalRef.current);
-            return null;
-          }
-          if (prevCountdown <= 1) {
-            if (intervalRef.current) clearInterval(intervalRef.current);
-            takePhoto();
-            return null;
-          }
-          return prevCountdown - 1;
-        });
-      }, 1000);
+      timeoutId = setTimeout(() => {
+        setCountdown(10);
+        intervalRef.current = setInterval(() => {
+          setCountdown((prevCountdown) => {
+            if (prevCountdown === null) {
+              if (intervalRef.current) clearInterval(intervalRef.current);
+              return null;
+            }
+            if (prevCountdown <= 1) {
+              if (intervalRef.current) clearInterval(intervalRef.current);
+              takePhoto();
+              return null;
+            }
+            return prevCountdown - 1;
+          });
+        }, 1000);
+      }, 3000);
     }
 
     return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
@@ -159,9 +178,9 @@ const Camera = ({
   }, [startCapture, takePhoto]);
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center overflow-hidden p-4 text-center">
+    <div className="mx-auto flex w-full max-w-2xl flex-col items-center justify-center overflow-hidden text-center">
       <div
-        className="relative flex w-full items-center justify-center overflow-hidden rounded-lg"
+        className="relative flex w-full items-center justify-center overflow-hidden"
         style={{ aspectRatio: `${aspectRatio}` }}
       >
         <video
@@ -173,7 +192,7 @@ const Camera = ({
             position: "absolute",
             top: "50%",
             left: "50%",
-            transform: "translate(-50%, -50%)",
+            transform: "translate(-50%, -50%) scaleX(-1)",
             minWidth: "100%",
             minHeight: "100%",
             width: "auto",
@@ -181,9 +200,16 @@ const Camera = ({
             objectFit: "cover",
           }}
         />
+        <Image
+          src="/speech_bubble.svg"
+          alt="Speech Bubble"
+          width={350}
+          height={150}
+          className="absolute bottom-0 left-1/2 mb-0 -translate-x-1/2"
+        />
         <canvas ref={canvasRef} style={{ display: "none" }} />
         {countdown !== null && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="z-10 flex items-center justify-center pb-20">
             <p
               className="text-9xl font-bold text-[#5fc5be]"
               // style={{ textShadow: "0 0 10px rgba(0, 0, 0, 0.8)" }}
