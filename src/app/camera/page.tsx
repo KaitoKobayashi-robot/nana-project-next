@@ -5,6 +5,7 @@ import { Loading } from "./_components/Loading";
 import { useEffect, useState } from "react";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import Image from "next/image";
 
 type CameraState = "waiting" | "cameraReady" | "capturing";
 
@@ -42,13 +43,30 @@ export default function CameraPage() {
   };
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="relative flex min-h-screen flex-col items-center justify-center pt-16">
+      <Image
+        src="/logo.svg"
+        alt="Logo"
+        width={100}
+        height={100}
+        className="absolute top-0 left-1/2 mt-4 -translate-x-1/2"
+      />
       {cameraState === "waiting" && (
-        <div className="flex min-h-screen flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center">
           <Loading />
         </div>
       )}
-      {cameraState === "cameraReady" && (
+      {cameraState === "capturing" && (
+        <div className="flex w-screen flex-col items-center justify-center pr-4 pl-4">
+          <div className="flex w-full max-w-md items-center justify-center border-2 border-[#2c2522] px-2 py-2">
+            <h2 className="text-lg font-bold">お題</h2>
+          </div>{" "}
+          <div className="w-full">
+            <Camera startCapture={true} onComplete={handleComplete} />
+          </div>
+        </div>
+      )}
+      {/* {cameraState === "cameraReady" && (
         <div className="flex min-h-screen flex-col items-center justify-center">
           <h1 className="mt-4 text-4xl font-bold">カメラ準備完了</h1>
           <p className="mt-4 text-lg whitespace-pre-wrap">
@@ -60,12 +78,7 @@ export default function CameraPage() {
             <Camera startCapture={false} onComplete={handleComplete} />
           </div>
         </div>
-      )}
-      {cameraState === "capturing" && (
-        <div className="flex h-screen w-screen max-w-md items-center justify-center">
-          <Camera startCapture={true} onComplete={handleComplete} />
-        </div>
-      )}
+      )} */}
     </div>
   );
 }
