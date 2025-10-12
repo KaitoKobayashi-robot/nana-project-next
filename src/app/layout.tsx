@@ -29,11 +29,13 @@ export const metadata: Metadata = {
     siteName: "ほめて！",
     images: [
       {
-        url: "/public/thumbnail.png",
+        url: "/thumbnail.png",
         width: 1200,
         height: 630,
       },
     ],
+    locale: "ja_JP",
+    type: "website",
   },
 };
 
