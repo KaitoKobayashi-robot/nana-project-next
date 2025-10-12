@@ -6,16 +6,6 @@ import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { ref, getDownloadURL } from "firebase/storage";
 import { db, storage } from "@/lib/firebase";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBS_S8Tfa_nNqH5TtrooC9EY4Be1qapIAk",
-  authDomain: "nana-project-firebase.firebaseapp.com",
-  projectId: "nana-project-firebase",
-  storageBucket: "nana-project-firebase.firebasestorage.app",
-  messagingSenderId: "146917195160",
-  appId: "1:146917195160:web:5ceaf0d6333e0eb644bfed",
-  measurementId: "G-CNDQ5N1D5P",
-};
-
 export default function HomePage() {
   const [images, setImages] = useState<{ id: string; url: string }[]>([]);
   const [loading, setLoading] = useState(true);
