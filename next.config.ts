@@ -6,8 +6,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     unoptimized: false,
-    // loader: "custom",
-    // loaderFile: "./loader.js",
+    loader: "custom",
+    loaderFile: "./loader.js",
     remotePatterns: [
       {
         protocol: "https",
@@ -17,15 +17,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: "/_fah/image/:path*",
-  //       destination:
-  //         "https://us-central1-nana-project-firebase.cloudfunctions.net/ext-image-processing-api-handler/:path*",
-  //     },
-  //   ];
-  // },
+  async rewrites() {
+    return [
+      {
+        source: "/_fah/image/:path*",
+        destination:
+          "https://us-central1-nana-project-firebase.cloudfunctions.net/ext-image-processing-api-handler/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
