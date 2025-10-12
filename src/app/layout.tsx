@@ -19,6 +19,9 @@ const zenMaruGothic = Zen_Maru_Gothic({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    "https://nana-project-next--nana-project-firebase.us-central1.hosted.app",
+  ),
   title: "ほめて！",
   description: "だれを？どのように？ほめて！",
   openGraph: {
