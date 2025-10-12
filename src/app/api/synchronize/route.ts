@@ -32,7 +32,7 @@ async function ensureDownloadToken(file: File): Promise<string> {
 export async function GET() {
   try {
     const col = db.collection("images");
-    const FOLDER = "user_images/";
+    const FOLDER = "user_images/resized";
 
     // --- 追加ここから ---
     // 最終同期日時を取得するための参照
