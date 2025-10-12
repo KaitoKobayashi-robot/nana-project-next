@@ -20,7 +20,21 @@ const zenMaruGothic = Zen_Maru_Gothic({
 
 export const metadata: Metadata = {
   title: "ほめて！",
-  description: "ほめて！",
+  description: "だれを？どのように？ほめて！",
+  openGraph: {
+    title: "ほめて！",
+    description:
+      "「だれを？どのように？ほめて！」ユーザ体験型ブースにおける主催者用のWebサイトです",
+    url: "https://nana-project-next--nana-project-firebase.us-central1.hosted.app",
+    siteName: "ほめて！",
+    images: [
+      {
+        url: "/public/thumbnail.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
