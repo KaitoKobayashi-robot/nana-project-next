@@ -154,7 +154,6 @@ const ImageCard = ({
         sizes={`${Math.ceil(100 / IMAGES_PER_ROW)}vw`}
         className="rounded-lg object-cover shadow-lg"
         priority
-        unoptimized
       />
     </div>
   );
