@@ -35,8 +35,8 @@ body {
   }
 }
 
-.animate-scroll {
-  animation: scroll 100s linear infinite;
+.animate-scroll-custom {
+  animation: scroll var(--animation-duration, 60s) linear infinite;
 }
 
 .mask-gradient {
