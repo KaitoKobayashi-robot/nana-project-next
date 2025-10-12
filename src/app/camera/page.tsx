@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import Image from "next/image";
+import Logo from "../../../public/logo.svg";
 
 type CameraState = "waiting" | "cameraReady" | "capturing";
 
@@ -48,11 +49,9 @@ export default function CameraPage() {
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center pt-16">
-      <Image
-        src="/logo.svg"
-        alt="Logo"
+      <Logo
         width={100}
-        height={100}
+        height={70}
         className="absolute top-0 left-1/2 mt-4 -translate-x-1/2"
       />
       {cameraState === "waiting" && (

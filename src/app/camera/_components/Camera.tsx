@@ -2,6 +2,7 @@
 
 import { useRef, useCallback, useState, useEffect } from "react";
 import Image from "next/image";
+import SpeechBubble from "../../../../public/speech_bubble.svg";
 
 const widthVideo = 3000;
 const heightVideo = 3000;
@@ -200,11 +201,9 @@ const Camera = ({
             objectFit: "cover",
           }}
         />
-        <Image
-          src="/speech_bubble.svg"
-          alt="Speech Bubble"
-          width={350}
-          height={150}
+        <SpeechBubble
+          width={400}
+          height={160}
           className="absolute bottom-0 left-1/2 mb-0 -translate-x-1/2"
         />
         <canvas ref={canvasRef} style={{ display: "none" }} />

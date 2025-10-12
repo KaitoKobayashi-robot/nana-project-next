@@ -1,13 +1,11 @@
 import { NavButtons } from "./_components/Navigation";
-import Image from "next/image";
+import Logo from "../../public/logo.svg";
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <main>
-        <Image
-          src="/logo.svg"
-          alt="Logo"
+        <Logo
           width={150}
           height={150}
           className="absolute top-0 left-1/2 mt-20 -translate-x-1/2"
