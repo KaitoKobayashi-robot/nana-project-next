@@ -11,6 +11,7 @@ type CameraState = "waiting" | "cameraReady" | "capturing";
 
 export default function CameraPage() {
   const [cameraState, setCameraState] = useState<CameraState>("waiting");
+  const [theme, setTheme] = useState<String>("");
 
   useEffect(() => {
     const triggerDocRef = doc(db, "camera", "trigger");
@@ -24,6 +25,9 @@ export default function CameraPage() {
           setCameraState("cameraReady");
         } else {
           setCameraState("waiting");
+        }
+        if (data.theme) {
+          setTheme(data.theme);
         }
       }
     });
@@ -59,7 +63,9 @@ export default function CameraPage() {
       {cameraState === "capturing" && (
         <div className="flex w-screen flex-col items-center justify-center pr-4 pl-4">
           <div className="flex w-full max-w-md items-center justify-center border-2 border-[#2c2522] px-2 py-2">
-            <h2 className="text-lg font-bold">お題</h2>
+            <h2 className="text-lg font-bold">
+              {theme === "" ? "お題" : theme}
+            </h2>
           </div>{" "}
           <div className="w-full">
             <Camera startCapture={true} onComplete={handleComplete} />
