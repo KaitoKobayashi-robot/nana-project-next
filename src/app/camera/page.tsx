@@ -50,7 +50,7 @@ export default function CameraPage() {
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center pt-16">
       <Logo
-        width={100}
+        width={150}
         height={70}
         className="absolute top-0 left-1/2 mt-4 -translate-x-1/2"
       />
@@ -62,7 +62,7 @@ export default function CameraPage() {
       {cameraState === "capturing" && (
         <div className="flex w-screen flex-col items-center justify-center pr-4 pl-4">
           <div className="flex w-full max-w-md items-center justify-center border-2 border-[#2c2522] px-2 py-2">
-            <h2 className="text-lg font-bold">
+            <h2 className="text-lg font-bold text-[#2c2522]">
               {theme === "" ? "お題" : theme}
             </h2>
           </div>{" "}

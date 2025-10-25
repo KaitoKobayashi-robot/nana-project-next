@@ -137,14 +137,10 @@ const ImageCard = ({
 }) => {
   return (
     <div
-      className={`relative rounded-lg transition-transform duration-300 ease-in-out ${
-        isLatest
-          ? "border-8 border-[#5fc5be] shadow-lg shadow-[#5fc5be]/80"
-          : ""
-      }`}
+      className={`relative rounded-lg transition-transform duration-300 ease-in-out`}
       style={{
         width: `${imageWidth}px`,
-        height: `${(imageWidth * 4) / 3}px`,
+        height: `${(imageWidth * 4499) / 3118}px`,
       }}
     >
       <Image
@@ -152,7 +148,7 @@ const ImageCard = ({
         alt="gallery image"
         fill
         sizes={`${Math.ceil(100 / IMAGES_PER_ROW)}vw`}
-        className="rounded-lg object-cover shadow-lg"
+        className="object-cover shadow-lg"
         priority
       />
     </div>

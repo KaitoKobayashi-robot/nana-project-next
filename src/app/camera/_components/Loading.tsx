@@ -1,5 +1,7 @@
 "use cliant";
 import { useState, useEffect, use } from "react";
+import Logo from "../../../../public/tablet.svg";
+import Arrows from "../../../../public/arrows_right.svg";
 
 export const Loading = () => {
   const [animationKey, setAnimationKey] = useState(0);
@@ -17,7 +19,7 @@ export const Loading = () => {
 
   return (
     <h1 className="flex flex-col items-center">
-      <div key={animationKey} className="flex">
+      {/* <div key={animationKey} className="flex">
         {bouncingText.map((char, index) => (
           <span
             key={index}
@@ -27,8 +29,12 @@ export const Loading = () => {
             {char}
           </span>
         ))}
-      </div>
-      <p className="mt-4 text-lg">タブレットを操作してね</p>
+      </div> */}
+      <Logo width={250} />
+      <Arrows width={250} className="p-4" />
+      <p className="mt-4 text-2xl font-black text-[#2c2522]">
+        タブレットの画面を見てね！
+      </p>
     </h1>
   );
 };

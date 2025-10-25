@@ -13,7 +13,7 @@ export default function CameraAdjustmentPage() {
       />
       <div className="flex w-screen flex-col items-center justify-center pr-4 pl-4">
         <div className="flex w-full max-w-md items-center justify-center border-2 border-[#2c2522] px-2 py-2">
-          <h2 className="text-lg font-bold">お題</h2>
+          <h2 className="text-lg font-bold text-[#2c2522]">お題</h2>
         </div>{" "}
         <div className="w-full">
           <Camera startCapture={false} onComplete={() => {}} />
