@@ -150,14 +150,14 @@ const Camera = ({
 
     if (startCapture) {
       timeoutId = setTimeout(() => {
-        setCountdown(10);
+        setCountdown(9);
         intervalRef.current = setInterval(() => {
           setCountdown((prevCountdown) => {
             if (prevCountdown === null) {
               if (intervalRef.current) clearInterval(intervalRef.current);
               return null;
             }
-            if (prevCountdown <= 1) {
+            if (prevCountdown <= 0) {
               if (intervalRef.current) clearInterval(intervalRef.current);
               takePhoto();
               return null;
