@@ -209,12 +209,19 @@ const Camera = ({
         <canvas ref={canvasRef} style={{ display: "none" }} />
         {countdown !== null && (
           <div className="z-10 flex items-center justify-center pb-20">
-            <p
+            <Image
+              src={`/countdown/${countdown}.png`}
+              alt={{ countdown }.toString()}
+              width={240}
+              height={180}
+              priority
+            />{" "}
+            {/* <p
               className="text-9xl font-bold text-[#5fc5be]"
               // style={{ textShadow: "0 0 10px rgba(0, 0, 0, 0.8)" }}
             >
               {countdown}
-            </p>
+            </p> */}
           </div>
         )}
         {isLoading && (
