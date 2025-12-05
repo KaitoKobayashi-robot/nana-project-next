@@ -33,6 +33,31 @@ const Camera = ({
   const isCapturing = useRef(false);
   const streamRef = useRef<MediaStream | null>(null);
 
+  const audioRef = useRef<Record<number, HTMLAudioElement>>({});
+  const shutterAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    for (let i = 0; i <= 9; i++) {
+      const audio = new Audio(`/sounds/${i}.mp3`);
+      audio.load();
+      audioRef.current[i] = audio;
+    }
+
+    const shutter = new Audio("/sounds/shutter.mp3");
+    shutter.load();
+    shutterAudioRef.current = shutter;
+  }, []);
+
+  const playSound = (num: number) => {
+    const audio = audioRef.current[num];
+    if (audio) {
+      audio.currentTime = 0;
+      audio.play().catch((error) => {
+        console.error("Error playing audio:", error);
+      });
+    }
+  };
+
   const handleUpload = useCallback(
     async (blob: Blob | null): Promise<void> => {
       if (!blob) return;
@@ -146,23 +171,38 @@ const Camera = ({
   }, []);
 
   useEffect(() => {
-    let timeoutId = null;
+    let timeoutId: NodeJS.Timeout | null = null;
 
     if (startCapture) {
       timeoutId = setTimeout(() => {
-        setCountdown(9);
+        const startCount = 9;
+        setCountdown(startCount);
+        playSound(startCount);
+
         intervalRef.current = setInterval(() => {
           setCountdown((prevCountdown) => {
             if (prevCountdown === null) {
               if (intervalRef.current) clearInterval(intervalRef.current);
               return null;
             }
-            if (prevCountdown <= 0) {
+            const nextCount = prevCountdown - 1;
+            if (nextCount == 0) {
               if (intervalRef.current) clearInterval(intervalRef.current);
+              if (shutterAudioRef.current) {
+                shutterAudioRef.current.currentTime = 0;
+                shutterAudioRef.current.play().catch((error) => {
+                  console.error("Error playing shutter sound:", error);
+                });
+              }
               takePhoto();
-              return null;
+              return 0;
             }
-            return prevCountdown - 1;
+            if (nextCount > 0) {
+              playSound(nextCount);
+              return nextCount;
+            }
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            return null;
           });
         }, 1000);
       }, 3000);
