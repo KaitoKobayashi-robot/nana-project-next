@@ -2,7 +2,7 @@
 
 import useMeasure from "react-use-measure";
 import { ImageGallery } from "@/app/gallery/_components/ImageGallery";
-import Logo from "../../../public/logo.svg";
+import Logo from "../../../public/home_port.svg";
 
 export default function HomePage() {
   const [ref, { width, height }] = useMeasure();
@@ -13,9 +13,7 @@ export default function HomePage() {
       className="flex h-screen w-full flex-col items-center justify-center overflow-hidden"
     >
       <div className="m-4 flex flex-row items-center justify-center gap-2 text-2xl font-black text-[#2c2522]">
-        <p>みんなの</p>
-        <Logo width={width * 0.1} />
-        <p>たち</p>
+        <Logo width={width * 0.3} />
       </div>
       <ImageGallery width={width} />
     </div>
