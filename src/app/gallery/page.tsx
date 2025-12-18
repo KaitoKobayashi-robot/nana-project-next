@@ -13,7 +13,7 @@ export default function HomePage() {
       className="flex h-screen w-full flex-col items-center justify-center overflow-hidden"
     >
       <div className="m-4 flex flex-row items-center justify-center gap-2 text-2xl font-black text-[#2c2522]">
-        <Logo width={width * 0.3} />
+        <Logo width={width * 0.2} />
       </div>
       <ImageGallery width={width} />
     </div>

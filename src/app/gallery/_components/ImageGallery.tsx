@@ -12,7 +12,7 @@ import { ref, getDownloadURL } from "firebase/storage";
 import { db, storage } from "@/lib/firebase";
 
 // --- 設定値 ---
-const IMAGES_PER_ROW = 6;
+const IMAGES_PER_ROW = 5;
 const TOTAL_ROWS = 2;
 const ANIMATION_DURATION = 360;
 
