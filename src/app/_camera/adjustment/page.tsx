@@ -1,5 +1,5 @@
 "use client";
-import Camera from "@/app/camera/_components/Camera";
+import Camera from "@/app/_camera/_components/Camera";
 import Image from "next/image";
 import Logo from "../../../../public/logo.svg";
 
