@@ -30,21 +30,21 @@ export const NavButtons = () => {
     " text-white p-10 active:bg-red-500/50 active:scale-110 active:rounded-4xl hover:scale-105 hover:rounded-3xl hover:border-b-3 hover:bg-red-500/35 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] container mx-auto rounded-2xl bg-red-500/10 backdrop-blur-[4px] p-6 border-b-2 border-white/30 shadow-lg";
   return (
     <div className="flex w-[18rem] flex-col space-y-8">
-      <Link href="/camera">
+      {/* <Link href="/camera">
         <div
           className={`${liquidGlassStyle} flex justify-center text-2xl font-bold lg:hidden`}
         >
           本番
         </div>
-      </Link>
+      </Link> */}
 
-      <Link href="/camera/adjustment">
+      {/* <Link href="/camera/adjustment">
         <div
           className={`${liquidGlassStyle} flex justify-center text-2xl font-bold lg:hidden`}
         >
           カメラ調節
         </div>
-      </Link>
+      </Link> */}
 
       <Link href="/gallery">
         <div
