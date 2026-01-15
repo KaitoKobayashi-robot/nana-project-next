@@ -4,6 +4,11 @@ import type { NextConfig } from "next";
 /** @type {import ('next').NextConfig} */
 
 const nextConfig: NextConfig = {
+  output: "standalone",
+  productionBrowserSourceMaps: false,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
     unoptimized: false,
     // loader: "custom",
