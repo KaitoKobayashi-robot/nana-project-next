@@ -8,8 +8,8 @@ export default function Home() {
       <Image
         src="/home_port.svg"
         alt="Home Port Logo"
-        width={150}
-        height={150}
+        width={300}
+        height={300}
       />
       <div className="mt-10">
         <NavButtons />
