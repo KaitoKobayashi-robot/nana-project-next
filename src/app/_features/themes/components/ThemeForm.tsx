@@ -24,7 +24,7 @@ export const ThemeForm = ({ onSubmit, isSubmitting }: Props) => {
           value={text}
           onChange={(e) => setText(e.target.value)}
           disabled={isSubmitting}
-          className="w-full rounded-lg border border-gray-300 p-3 pr-16 text-gray-800 transition-all outline-none focus:ring-blue-500 disabled:bg-gray-100"
+          className="w-full rounded-lg border-4 border-gray-800 p-3 pr-16 text-gray-800 transition-all outline-none focus:ring-blue-500 disabled:bg-gray-100"
           placeholder="新しいお題を入力..."
         />
         <span
@@ -34,7 +34,7 @@ export const ThemeForm = ({ onSubmit, isSubmitting }: Props) => {
       <button
         type="submit"
         disabled={isSubmitting || !text || text.length > MAX_LENGTH}
-        className="rounded-lg bg-blue-600 px-4 py-2 font-bold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+        className="rounded-lg bg-[#5fc5be] px-4 py-2 font-bold text-white transition-colors hover:bg-[#51a8a2] disabled:cursor-not-allowed disabled:opacity-70"
       >
         {isSubmitting ? "送信中..." : "追加する"}
       </button>

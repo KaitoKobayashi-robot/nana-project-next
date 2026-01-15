@@ -40,7 +40,7 @@ export const THemeManager = () => {
     );
 
   return (
-    <div className="mx-auto min-h-[500px] max-w-xl rounded-xl bg-gray-50 p-4">
+    <div className="mx-auto min-h-[500px] max-w-xl rounded-xl p-4">
       <h2 className="mb-6 text-center text-2xl font-bold text-gray-800">
         お題管理
       </h2>
