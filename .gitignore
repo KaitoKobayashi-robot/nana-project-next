@@ -42,3 +42,6 @@ next-env.d.ts
 
 serviceAccountKey.json
 certificates
+
+# ローカル用script
+/src/lib/script
