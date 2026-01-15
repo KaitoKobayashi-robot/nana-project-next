@@ -54,6 +54,10 @@ export const NavButtons = () => {
         </div>
       </Link>
 
+      <Link href="/theme-setting">
+        <div className={`${liquidGlassStyle} hidden justify-center text-2xl font-bold lg:flex`}>お題設定</div>
+      </Link>
+
       <button onClick={handleClick}>
         <div
           className={`${liquidGlassResetStyle} flex justify-center text-2xl font-bold`}
