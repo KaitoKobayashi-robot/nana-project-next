@@ -53,9 +53,20 @@ export const NavButtons = () => {
           ギャラリー
         </div>
       </Link>
+      <Link href="/gallery-list">
+        <div
+          className={`${liquidGlassStyle} flex justify-center text-2xl font-bold`}
+        >
+          今までの"ほめて"
+        </div>
+      </Link>
 
       <Link href="/theme-setting">
-        <div className={`${liquidGlassStyle} hidden justify-center text-2xl font-bold lg:flex`}>お題設定</div>
+        <div
+          className={`${liquidGlassStyle} flex justify-center text-2xl font-bold`}
+        >
+          お題設定
+        </div>
       </Link>
 
       <button onClick={handleClick}>
