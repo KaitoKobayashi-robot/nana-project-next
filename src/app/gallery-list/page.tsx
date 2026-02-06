@@ -4,7 +4,7 @@ import { GalleryImage, useGallery } from "./hooks/useGallaery";
 import { useState } from "react";
 
 export default function GalleryListPage() {
-  const { images, loading, error } = useGallery();
+  const { images, loading, error } = useGallery({ limitCount: 300 });
 
   // 選択した画像を管理する状態
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
