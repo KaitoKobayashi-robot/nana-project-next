@@ -69,6 +69,14 @@ export const NavButtons = () => {
         </div>
       </Link>
 
+      <Link href="/gallery-delete">
+        <div
+          className={`${liquidGlassStyle} flex justify-center text-2xl font-bold`}
+        >
+          画像削除
+        </div>
+      </Link>
+
       <button onClick={handleClick}>
         <div
           className={`${liquidGlassResetStyle} flex justify-center text-2xl font-bold`}
