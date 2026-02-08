@@ -4,7 +4,7 @@ import { GalleryImage, useGallery } from "../gallery-list/hooks/useGallaery";
 import { useState, useEffect } from "react";
 
 export default function GalleryDeletePage() {
-  const { images, loading, error } = useGallery({ limitCount: 300 });
+  const { images, loading, error } = useGallery({ limitCount: 1000 });
 
   // 選択した画像IDを管理
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
