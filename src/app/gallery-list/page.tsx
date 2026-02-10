@@ -32,12 +32,16 @@ export default function GalleryListPage() {
 
   return (
     <>
-      <main className="container mx-auto px-4 py-8">
-        <header className="mb-8 flex items-end justify-between border-b pb-4">
-          <h1 className="text-xl font-bold text-gray-800 sm:text-2xl md:text-3xl">
-            今までのみんなのほめて
-          </h1>
-          <p className="text-sm text-gray-500">{images.length} 枚のほめて</p>
+      <main className="container mx-auto px-4 pt-24 pb-8">
+        <header className="fixed top-0 right-0 left-0 z-20 bg-[#eed243]/80 shadow-md backdrop-blur-md">
+          <div className="container mx-auto px-4 py-4">
+            <div className="flex items-end justify-between">
+              <h1 className="text-xl font-bold text-gray-800 sm:text-2xl md:text-3xl">
+                今までのみんなのほめて
+              </h1>
+              <p className="text-sm text-gray-500">{images.length} 枚のほめて</p>
+            </div>
+          </div>
         </header>
 
         {images.length === 0 ? (
