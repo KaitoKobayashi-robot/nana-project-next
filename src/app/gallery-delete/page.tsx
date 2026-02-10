@@ -115,7 +115,7 @@ export default function GalleryDeletePage() {
         <header className="fixed top-0 right-0 left-0 z-20 bg-[#eed243]/80 shadow-md backdrop-blur-md">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-end justify-between">
-              <h1 className="text-3xl font-bold text-gray-800">画像管理</h1>
+              <h1 className="text-xl font-bold text-gray-800 sm:text-2xl md:text-3xl">画像管理</h1>
               <p className="text-sm text-gray-500">{images.length} 枚の画像</p>
             </div>
 

@@ -34,7 +34,7 @@ export default function GalleryListPage() {
     <>
       <main className="container mx-auto px-4 py-8">
         <header className="mb-8 flex items-end justify-between border-b pb-4">
-          <h1 className="text-3xl font-bold text-gray-800">
+          <h1 className="text-xl font-bold text-gray-800 sm:text-2xl md:text-3xl">
             今までのみんなのほめて
           </h1>
           <p className="text-sm text-gray-500">{images.length} 枚のほめて</p>
